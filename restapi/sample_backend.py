@@ -36,14 +36,32 @@ users = {
    ]
 }
 
-@app.route('/users', methods=['GET', 'POST'])
+@app.route('/users', methods=['GET', 'POST', 'DELETE'])
 def get_users():
    if request.method == 'GET':
       search_username = request.args.get('name')
-      if search_username :
+      search_job = request.args.get('job')
+      if search_username and search_job :
+         subdict = {'users_list' : []}
+         subd2 = {'users_list' : []}
+         for user in users['users_list']:
+            if user['name'] == search_username:
+               subdict['users_list'].append(user)
+         for user2 in subdict['users_list']:
+            if user2['job'] == search_job:
+               subd2['users_list'].append(user2)
+
+         return subd2
+      elif search_username :
          subdict = {'users_list' : []}
          for user in users['users_list']:
             if user['name'] == search_username:
+               subdict['users_list'].append(user)
+         return subdict
+      elif search_job :
+         subdict = {'users_list' : []}
+         for user in users['users_list']:
+            if user['job'] == search_job:
                subdict['users_list'].append(user)
          return subdict
       return users
@@ -55,6 +73,17 @@ def get_users():
       #resp.status_code = 200 #optionally, you can always set a response code. 
       # 200 is the default code for a normal response
       return resp
+   elif request.method == 'DELETE':
+      userToDelete = request.args.get('id')
+      if userToDelete : 
+         subdict = {'users_list' : []}
+         for user in users['users_list']:
+            if user['id'] == userToDelete:
+               users['users_list'].remove(user)
+         return users
+      return users
+
+
 @app.route('/users/<id>')
 def get_user(id):
    if id :
