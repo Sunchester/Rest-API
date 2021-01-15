@@ -82,8 +82,9 @@ def get_users():
          for user in users['users_list']:
             if user['id'] == userToDelete:
                users['users_list'].remove(user)
-         return users
-      return users
+      resp = jsonify(users)
+      resp.status_code = 200
+      return resp
 
 
 @app.route('/users/<id>')
