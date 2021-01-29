@@ -50,7 +50,7 @@ def get_user(id):
         user = User({"_id":id})
         resp = user.remove()
         if resp["n"] == 1:
-           return {}, 200
+           return {}, 204
         else:
            return jsonify({"error": "User not found"}), 404
 
